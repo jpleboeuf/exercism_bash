@@ -11,14 +11,14 @@ hello_world() {
 }
 
 main () {
-  args=$@
+  local -r -a args=( "$@" )
 
-  if [ -z ${args} ]; then
+  if [[ -z "${args[*]}" ]]; then
     hello_world
     (( $? == 0 )) && exit 0
     exit 1
   else
-    echo "Too many command line parameters: ${args}"
+    echo "Too many command line parameters: ${args[*]}"
     exit 9
   fi
 
