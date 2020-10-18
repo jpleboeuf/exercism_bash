@@ -17,14 +17,16 @@ main () {
     if hello_world; then
       exit 0
     else
+      echo "Unexpected behaviour from hello_world()" >&2
       exit 1
     fi
   else
-    echo "Too many command line parameters: ${args[*]}"
+    echo "Too many command line parameters: ${args[*]}" >&2
     exit 9
   fi
 
-  exit 999
+  echo "Unexpected point reached" >&2
+  exit 255
 }
 
 # Calls the main function
