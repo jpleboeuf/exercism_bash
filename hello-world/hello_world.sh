@@ -14,9 +14,11 @@ main () {
   local -r -a args=( "$@" )
 
   if [[ -z "${args[*]}" ]]; then
-    hello_world
-    (( $? == 0 )) && exit 0
-    exit 1
+    if hello_world; then
+      exit 0
+    else
+      exit 1
+    fi
   else
     echo "Too many command line parameters: ${args[*]}"
     exit 9
