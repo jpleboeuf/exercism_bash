@@ -9,18 +9,15 @@ two_fer() {
   local -r -a args=( "$@" )
 
   case "${#args[@]}" in
-    0)
-      local -r name="you"
-      ;;
-    1)
-      local -r name="$1"
+    0|1)
+      local -r name="${1:-you}"
+      printf "One for %s, one for me." "$name"
       ;;
     *)
       echo "Too many function parameters for two_fer(): ${args[*]}" >&2
       return 9
       ;;
   esac
-  echo "One for ${name}, one for me."
 
   return 0
 }
