@@ -1,24 +1,54 @@
 #!/usr/bin/env bash
 
-# The following comments should help you get started:
-# - Bash is flexible. You may use functions or write a "raw" script.
-#
-# - Complex code can be made easier to read by breaking it up
-#   into functions, however this is sometimes overkill in bash.
-#
-# - You can find links about good style and other resources
-#   for Bash in './README.md'. It came with this exercise.
-#
-#   Example:
-#   # other functions here
-#   # ...
-#   # ...
-#
-#   main () {
-#     # your main function code here
-#   }
-#
-#   # call main with all of the positional arguments
-#   main "$@"
-#
-# *** PLEASE REMOVE THESE COMMENTS BEFORE SUBMITTING YOUR SOLUTION ***
+# Sets option - exit script when there is an error:
+set -o errexit
+# Sets option - exit script when there are unset variables:
+set -o nounset
+
+two_fer() {
+  local -r -a args=( "$@" )
+
+  case "${#args[@]}" in
+    0)
+      local -r name="you"
+      ;;
+    1)
+      local -r name="$1"
+      ;;
+    *)
+      echo "Too many function parameters for two_fer(): ${args[*]}" >&2
+      return 9
+      ;;
+  esac
+  echo "One for ${name}, one for me."
+
+  return 0
+}
+
+main () {
+  local -r -a args=( "$@" )
+
+  # The test "handle arg with spaces"
+  #  forces us to accept more than 1 argument
+  #  without returning an error,
+  #  but supernumerary arguments need to be discarded.
+  local -a rargs=( "${args[@]}" )
+  if [[ ${#args[@]} -gt 1 ]]; then
+    rargs=( "${rargs[@]:0:1}" )
+  fi
+
+  if two_fer "${rargs[@]}" ; then
+    exit 0
+  else
+    echo "Unexpected behaviour from two_fer()" >&2
+    exit 1
+  fi
+
+  echo "Unexpected point reached" >&2
+  exit 255
+}
+
+# Calls the main function
+#  passing to it all the positional arguments via "$@"
+#  (in quotes to prevent whitespace issues):
+main "$@"
